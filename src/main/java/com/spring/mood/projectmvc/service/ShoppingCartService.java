@@ -21,21 +21,23 @@ public class ShoppingCartService {
     public void addToCart(Long itemId, int itemPrice, int quantity, String userAccount) {
         ShoppingCart existingCart = shoppingCartMapper.findItemByUserAccountAndItemId(userAccount, itemId);
 
-        if (existingCart != null) {
-            Long newQuantity = existingCart.getCartTotalCount() + quantity;
-            int newTotalPrice = existingCart.getCartTotalPrice() + (itemPrice * quantity);
+        if (existingCart != null) { // 기존의 장바구니가 이미 아이템이 있을경우
+            Long newQuantity = existingCart.getCartTotalCount() + quantity; // 총 개수 추가
+            int newTotalPrice = existingCart.getCartTotalPrice() + (itemPrice * quantity); // 총 가격 추가
 
-            existingCart.setCartTotalCount(newQuantity);
-            existingCart.setCartTotalPrice(newTotalPrice);
+            existingCart.setCartTotalCount(newQuantity); // 기존의 총 개수 setter 로 변경
+            existingCart.setCartTotalPrice(newTotalPrice); // 기존의 총 가격 setter 로 변경
 
-            boolean updated = shoppingCartMapper.update(existingCart);
+            boolean updated = shoppingCartMapper.update(existingCart); // 업데이트
+
             if (!updated) {
                 throw new RuntimeException("장바구니 아이템을 업데이트하는 중 오류가 발생했습니다.");
             }
 
             log.info("업데이트된 장바구니 아이템: {}", existingCart);
-        } else {
-            ShoppingCart shoppingCart = new ShoppingCart();
+
+        } else { // 기존의 장바구니가 null 일 경우
+            ShoppingCart shoppingCart = new ShoppingCart(); // 새로운 장바구니를 만듬
             shoppingCart.setUserAccount(userAccount);
             shoppingCart.setShopItemId(itemId);
             shoppingCart.setCartTotalPrice(itemPrice * quantity);
@@ -44,6 +46,7 @@ public class ShoppingCartService {
             log.info("장바구니에 추가: {}", shoppingCart);
 
             boolean saved = shoppingCartMapper.save(shoppingCart);
+
             if (!saved) {
                 throw new RuntimeException("장바구니에 상품을 추가하는 중 오류가 발생했습니다.");
             }

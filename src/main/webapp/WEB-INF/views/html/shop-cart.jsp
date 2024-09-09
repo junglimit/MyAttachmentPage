@@ -25,7 +25,7 @@
           </div>
         </div>
       </div> -->
-      <!-- 아이템 반복 -->
+      <!-- 아이템 반복 (controller 에서 model 로 보내준 cartItems) -->
       <c:forEach var="cartItem" items="${cartItems}">
         <div class="cart-item" data-item-id="${cartItem.shopItemId}">
           <div class="inner">

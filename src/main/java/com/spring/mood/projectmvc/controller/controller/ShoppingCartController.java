@@ -27,8 +27,8 @@ public class ShoppingCartController {
     public String addToCart(@RequestParam("itemId") Long itemId,
                             @RequestParam("itemPrice") int itemPrice,
                             @RequestParam("quantity") int quantity,
-                            RedirectAttributes redirectAttributes,
-                            HttpSession session) {
+                            RedirectAttributes redirectAttributes, // 메세지,정보 전달해주는 수송 객체
+                            HttpSession session ) { // id 정보 세션에서 가져오기
         SignInUserInfoDTO loginUser = (SignInUserInfoDTO) session.getAttribute("loginUser");
         String userAccount = loginUser.getAccount();
 
@@ -46,7 +46,7 @@ public class ShoppingCartController {
         SignInUserInfoDTO loginUser = (SignInUserInfoDTO) session.getAttribute("loginUser");
 
         List<ShoppingCartResponseDto> cartItems = shoppingCartService.getCartByUser(loginUser.getAccount());
-        model.addAttribute("cartItems", cartItems);
+        model.addAttribute("cartItems", cartItems); // jsp 로 전송
 
         int cartTotalPrice = cartItems.stream()
                 .mapToInt(ShoppingCartResponseDto::getCartTotalPrice)
